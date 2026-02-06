@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a Memorial</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            background-image: linear-gradient(to bottom, #f5f7fa 0%, #e4edf5 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(to right, #2c3e50, #4a6491);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, #e74c3c, #f39c12);
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eaeaea;
+            font-weight: 600;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        label.required:after {
+            content: ' *';
+            color: #e74c3c;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background-color: #fcfcfc;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            background-color: white;
+        }
+
+        .file-input-container {
+            position: relative;
+            margin-top: 5px;
+        }
+
+        .file-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-input-display {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: #fcfcfc;
+            transition: all 0.3s;
+        }
+
+        .file-input-display i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+
+        .file-input-display:hover {
+            background-color: #f5f5f5;
+        }
+
+        .file-name {
+            color: #666;
+            font-style: italic;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            background: linear-gradient(to right, #3498db, #2c3e50);
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-top: 30px;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(to right, #2980b9, #1a252f);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .validation-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .validation-message.show {
+            display: block;
+        }
+
+        .form-group.error input,
+        .form-group.error select,
+        .form-group.error .file-input-display {
+            border-color: #e74c3c;
+        }
+
+        .form-group.success input,
+        .form-group.success select,
+        .form-group.success .file-input-display {
+            border-color: #2ecc71;
+        }
+
+        .memorial-note {
+            background-color: #f9f9f9;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-top: 30px;
+            border-radius: 0 6px 6px 0;
+            font-size: 15px;
+            color: #555;
+        }
+
+        .memorial-note i {
+            color: #3498db;
+            margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .form-row .form-group {
+                min-width: 100%;
+            }
+            
+            .container {
+                border-radius: 8px;
+            }
+            
+            .header, .form-container {
+                padding: 20px;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-heart"></i> Create a Memorial</h1>
+            <p>Honor and remember your loved one by creating a lasting memorial tribute</p>
+        </div>
+        
+        <div class="form-container">
+            <form id="memorialForm">
+                <h2 class="section-title"><i class="fas fa-user-circle"></i> Your Details</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName" class="required">First Name</label>
+                        <input type="text" id="firstName" placeholder="Enter your first name">
+                        <div class="validation-message" id="firstNameError">Please enter your first name</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="age" class="required">Age</label>
+                        <input type="number" id="age" min="1" max="120" placeholder="Your age">
+                        <div class="validation-message" id="ageError">Please enter a valid age (1-120)</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="address" class="required">Address</label>
+                        <input type="text" id="address" placeholder="Your full address">
+                        <div class="validation-message" id="addressError">Please enter your address</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gender" class="required">Gender</label>
+                        <select id="gender">
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                            <option value="prefer-not-to-say">Prefer not to say</option>
+                        </select>
+                        <div class="validation-message" id="genderError">Please select your gender</div>
+                    </div>
+                </div>
+                
+                <h2 class="section-title"><i class="fas fa-angel"></i> Deceased Person Details</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="deceasedName" class="required">Deceased Person's Name</label>
+                        <input type="text" id="deceasedName" placeholder="Full name of the deceased">
+                        <div class="validation-message" id="deceasedNameError">Please enter the name of the deceased</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="deceasedAge" class="required">Deceased Person's Age</label>
+                        <select id="deceasedAge">
+                            <option value="">Select Age</option>
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                        <div class="validation-message" id="deceasedAgeError">Please select the age of the deceased</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="deceasedAddress" class="required">Deceased Person's Address</label>
+                    <input type="text" id="deceasedAddress" placeholder="Address of the deceased">
+                    <div class="validation-message" id="deceasedAddressError">Please enter the address of the deceased</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="deceasedImages" class="required">Deceased Person's Images</label>
+                    <div class="file-input-container">
+                        <input type="file" id="deceasedImages" class="file-input" accept="image/*" multiple>
+                        <div class="file-input-display">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span class="file-name">Choose files (JPEG, PNG, GIF)</span>
+                        </div>
+                    </div>
+                    <div class="validation-message" id="deceasedImagesError">Please select at least one image</div>
+                    <small>You can select multiple images (max 5 files, 5MB each)</small>
+                </div>
+                
+                <div class="memorial-note">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Note:</strong> All information provided will be used to create a respectful memorial page. 
+                    You will have the opportunity to review and edit the memorial before it is published.
+                </div>
+                
+                
+
+                    <button onclick="window.location.href='pricing.html'">submitmemorial</button>
+
+                
+            </form>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>Created with respect and remembrance &copy; 2023 Memorial Tribute</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Populate age dropdown for deceased person (1-120)
+            const deceasedAgeSelect = document.getElementById('deceasedAge');
+            for (let i = 1; i <= 120; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                deceasedAgeSelect.appendChild(option);
+            }
+            
+            // Set default value to 19 as shown in the original form
+            deceasedAgeSelect.value = 19;
+            
+            // File input display
+            const fileInput = document.getElementById('deceasedImages');
+            const fileNameDisplay = document.querySelector('.file-name');
+            
+            fileInput.addEventListener('change', function() {
+                if (fileInput.files.length > 0) {
+                    const fileNames = [];
+                    for (let i = 0; i < Math.min(fileInput.files.length, 3); i++) {
+                        fileNames.push(fileInput.files[i].name);
+                    }
+                    
+                    if (fileInput.files.length > 3) {
+                        fileNameDisplay.textContent = fileNames.join(', ') + ` and ${fileInput.files.length - 3} more`;
+                    } else {
+                        fileNameDisplay.textContent = fileNames.join(', ');
+                    }
+                    
+                    // Validate file size and count
+                    validateFiles(fileInput.files);
+                } else {
+                    fileNameDisplay.textContent = 'Choose files (JPEG, PNG, GIF)';
+                }
+            });
+            
+            // Form validation
+            const form = document.getElementById('memorialForm');
+            const requiredFields = [
+                { id: 'firstName', errorId: 'firstNameError' },
+                { id: 'age', errorId: 'ageError' },
+                { id: 'address', errorId: 'addressError' },
+                { id: 'gender', errorId: 'genderError' },
+                { id: 'deceasedName', errorId: 'deceasedNameError' },
+                { id: 'deceasedAge', errorId: 'deceasedAgeError' },
+                { id: 'deceasedAddress', errorId: 'deceasedAddressError' },
+                { id: 'deceasedImages', errorId: 'deceasedImagesError' }
+            ];
+            
+            // Add real-time validation
+            requiredFields.forEach(field => {
+                const input = document.getElementById(field.id);
+                const error = document.getElementById(field.errorId);
+                
+                if (input.type === 'file') {
+                    // File input validation
+                    input.addEventListener('change', function() {
+                        validateFileInput(input, error);
+                    });
+                } else {
+                    // Regular input validation
+                    input.addEventListener('blur', function() {
+                        validateInput(input, error);
+                    });
+                    
+                    input.addEventListener('input', function() {
+                        // Clear error when user starts typing
+                        if (input.value.trim() !== '') {
+                            error.classList.remove('show');
+                            input.parentElement.classList.remove('error');
+                        }
+                    });
+                }
+            });
+            
+            // Form submission
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                let isValid = true;
+                
+                // Validate all required fields
+                requiredFields.forEach(field => {
+                    const input = document.getElementById(field.id);
+                    const error = document.getElementById(field.errorId);
+                    
+                    if (input.type === 'file') {
+                        if (!validateFileInput(input, error)) {
+                            isValid = false;
+                        }
+                    } else {
+                        if (!validateInput(input, error)) {
+                            isValid = false;
+                        }
+                    }
+                });
+                
+                // Special validation for age field
+                const ageInput = document.getElementById('age');
+                const ageError = document.getElementById('ageError');
+                if (ageInput.value < 1 || ageInput.value > 120) {
+                    ageError.textContent = 'Please enter a valid age (1-120)';
+                    ageError.classList.add('show');
+                    ageInput.parentElement.classList.add('error');
+                    isValid = false;
+                }
+                
+                if (isValid) {
+                    // Form is valid - show success message and reset form
+                    alert('Memorial submitted successfully. Thank you for creating a tribute to your loved one.');
+                    form.reset();
+                    fileNameDisplay.textContent = 'Choose files (JPEG, PNG, GIF)';
+                    
+                    // Remove validation states
+                    requiredFields.forEach(field => {
+                        const input = document.getElementById(field.id);
+                        const error = document.getElementById(field.errorId);
+                        error.classList.remove('show');
+                        input.parentElement.classList.remove('error');
+                        input.parentElement.classList.remove('success');
+                    });
+                    
+                    // Reset age dropdown to default
+                    deceasedAgeSelect.value = 19;
+                } else {
+                    // Scroll to first error
+                    const firstError = document.querySelector('.validation-message.show');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+            
+            // Validation functions
+            function validateInput(input, errorElement) {
+                const value = input.value.trim();
+                
+                if (value === '') {
+                    errorElement.textContent = `Please fill in this field`;
+                    errorElement.classList.add('show');
+                    input.parentElement.classList.add('error');
+                    input.parentElement.classList.remove('success');
+                    return false;
+                } else {
+                    errorElement.classList.remove('show');
+                    input.parentElement.classList.remove('error');
+                    input.parentElement.classList.add('success');
+                    return true;
+                }
+            }
+            
+            function validateFileInput(input, errorElement) {
+                if (input.files.length === 0) {
+                    errorElement.textContent = 'Please select at least one image';
+                    errorElement.classList.add('show');
+                    input.parentElement.classList.add('error');
+                    input.parentElement.classList.remove('success');
+                    return false;
+                } else {
+                    // Validate file types and sizes
+                    const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                    const maxSize = 5 * 1024 * 1024; // 5MB
+                    let isValid = true;
+                    
+                    for (let i = 0; i < input.files.length; i++) {
+                        const file = input.files[i];
+                        
+                        if (!validTypes.includes(file.type)) {
+                            errorElement.textContent = 'Only JPEG, PNG, and GIF images are allowed';
+                            isValid = false;
+                            break;
+                        }
+                        
+                        if (file.size > maxSize) {
+                            errorElement.textContent = 'File size should not exceed 5MB';
+                            isValid = false;
+                            break;
+                        }
+                    }
+                    
+                    if (isValid) {
+                        errorElement.classList.remove('show');
+                        input.parentElement.classList.remove('error');
+                        input.parentElement.classList.add('success');
+                        return true;
+                    } else {
+                        errorElement.classList.add('show');
+                        input.parentElement.classList.add('error');
+                        input.parentElement.classList.remove('success');
+                        return false;
+                    }
+                }
+            }
+            
+            function validateFiles(files) {
+                const maxFiles = 5;
+                const maxSize = 5 * 1024 * 1024; // 5MB
+                const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                const errorElement = document.getElementById('deceasedImagesError');
+                
+                if (files.length > maxFiles) {
+                    errorElement.textContent = `Maximum ${maxFiles} files allowed`;
+                    errorElement.classList.add('show');
+                    fileInput.parentElement.classList.add('error');
+                    return false;
+                }
+                
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    
+                    if (!validTypes.includes(file.type)) {
+                        errorElement.textContent = 'Only JPEG, PNG, and GIF images are allowed';
+                        errorElement.classList.add('show');
+                        fileInput.parentElement.classList.add('error');
+                        return false;
+                    }
+                    
+                    if (file.size > maxSize) {
+                        errorElement.textContent = 'File size should not exceed 5MB';
+                        errorElement.classList.add('show');
+                        fileInput.parentElement.classList.add('error');
+                        return false;
+                    }
+                }
+                
+                errorElement.classList.remove('show');
+                fileInput.parentElement.classList.remove('error');
+                fileInput.parentElement.classList.add('success');
+                return true;
+            }
+        });
+    </script>
+</body>
+</html>
